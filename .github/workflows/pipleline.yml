@@ -1,0 +1,26 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ci-cd.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build and test
+        run: |
+          npm install
+          npm run build
+          npm run test
+      - name: Deploy to production
+        uses: actions/deploy@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository: my-repo
+          ref: main
